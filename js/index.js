@@ -1,6 +1,12 @@
 const ruax = new Ruax()
 ruax.defaults.baseUrl = 'https://www.mvi-web.cn/chatSys'//'http://localhost:3032','https://www.mvi-web.cn/chatSys'
 const wsUrl = 'wss://www.mvi-web.cn/ws' //'ws://localhost:3031',"wss://www.mvi-web.cn/ws"
+const imageCompression = new ImageCompression({
+	mimeType:'jpeg',
+	quality:0.4,
+	minSize:300,
+	maxSize:300
+})
 new Vue({
 	el: '#app',
 	data() {
@@ -94,6 +100,16 @@ new Vue({
 				accept: 'image',
 				minSize: -1,
 				maxSize: -1,
+				minLength: -1,
+				maxLength: -1
+			},
+			//编辑器上传视频配置
+			uploadVideoProps:{
+				multiple: false,
+				allowedFileType: ['mp4', 'avi', 'wav'],
+				accept: 'video',
+				minSize: -1,
+				maxSize: 1024,
 				minLength: -1,
 				maxLength: -1
 			},
@@ -425,6 +441,26 @@ new Vue({
 			this.$refs.editor.restoreRange()
 			document.execCommand('insertHTML', false, `<img class="app-emoji-show" src="${url}" />`)
 			this.emojiShow = false
+		},
+		//图片选择
+		uploadImage(files){
+			this.$showToast({
+				type:'loading',
+				message:'正在压缩图片...'
+			})
+			const file = files[0]
+			imageCompression.compress(file).then(res=>{
+				this.$dap.file.dataFileToBase64(res).then(url=>{
+					this.$refs.editor.insertImage(url)
+					this.$hideToast()
+				})
+			})
+		},
+		uploadVideo(files){
+			const file = files[0]
+			this.$dap.file.dataFileToBase64(file).then(url=>{
+				this.$refs.editor.insertVideo(url)
+			})
 		}
 	},
 	beforeDestroy() {

@@ -69,7 +69,7 @@
 							<m-editor ref="editor" :disabled="!webSocket || webSocket.readyState!=1" class="mvi-text-left"
 								:border="false" @keydown.enter.exact="sendMessage" @keyup.enter.exact="clearEditor"
 								height="2.4rem" placeholder="在这里输入..." v-model="message" :menus="editorMenus"
-								:upload-image-props="uploadImageProps" :menu-index="menuIndex" paste-text :layer-props="layerProps" :menu-icons="editorMenuIcons" :tooltips="editorTooltips" @custom="customAction"></m-editor>
+								:upload-image-props="uploadImageProps" :upload-video-props="uploadVideoProps" :menu-index="menuIndex" paste-text :layer-props="layerProps" :menu-icons="editorMenuIcons" :tooltips="editorTooltips" @custom="customAction" :use-base64="false" @upload-image="uploadImage" @upload-video="uploadVideo"></m-editor>
 							<div class="mvi-flex-end mvi-p-2">
 								<m-button key="init" v-if="!webSocket || webSocket.readyState == 0"
 									:loading="connecting" load-text="正在连接..." @click="init" class="mvi-mr-2"
@@ -97,6 +97,7 @@
 		</div>
 	</body>
 	<script src="./js/ruax.js" type="text/javascript" charset="utf-8"></script>
+	<script src="./js/web-image-compression.js" type="text/javascript" charset="utf-8"></script>
 	<script src="./js/vue.min.js" type="text/javascript" charset="utf-8"></script>
 	<script src="./mvi-web@4.10.9/mvi.umd.min.js" type="text/javascript" charset="utf-8"></script>
 	<script src="./js/index.js" type="text/javascript" charset="utf-8"></script>
