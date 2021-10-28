@@ -1,6 +1,6 @@
 const ruax = new Ruax()
-ruax.defaults.baseUrl = 'http://localhost:3032'//'http://localhost:3032','https://www.mvi-web.cn/chatSys'
-const wsUrl = 'ws://localhost:3031' //'ws://localhost:3031',"wss://www.mvi-web.cn/ws"
+ruax.defaults.baseUrl = 'https://www.mvi-web.cn/chatSys'//'http://localhost:3032','https://www.mvi-web.cn/chatSys'
+const wsUrl = 'wss://www.mvi-web.cn/ws' //'ws://localhost:3031',"wss://www.mvi-web.cn/ws"
 const imageCompression = new ImageCompression({
 	mimeType:'jpeg',
 	quality:0.4,
