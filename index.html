@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport"
+			content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+		<title>即时在线聊天室</title>
+		<link rel="stylesheet" type="text/css" href="./mvi-web@4.10.9/mvi.css" />
+		<link rel="stylesheet" type="text/css" href="./css/index.css" />
+	</head>
+	<body>
+		<div id="app" v-cloak>
+			<m-row>
+				<m-col style="position: relative;" :xs="{span:24,offset:0}" :sm="{span:22,offset:1}" :md="{span:18,offset:3}" :lg="{span:14,offset:5}" :xl="{span:10,offset:7}">
+					<m-panel class="app-panel" title-class="mvi-bg-info mvi-flex-start app-panel-title"
+						content-class="app-panel-content" footer-class="mvi-p-0">
+						<template #title>
+							<div class="mvi-text-bold mvi-font-h4">凌凯的聊天室（房间号：{{room}}）</div>
+							<div v-if="connecting" class="mvi-flex-start mvi-ml-4">
+								<m-loading color="#03a8f3" size="0.28rem"></m-loading>
+								<span class="mvi-ml-1">正在连接...</span>
+							</div>
+							<div v-else id="online" class="mvi-ml-4" @mouseenter="onlineShow=true" @mouseleave="onlineShow=false">
+								<div class="mvi-flex-start mvi-cursor-pointer" id="online-target">
+									<m-icon type="user-group"></m-icon>
+									<span style="line-height: 1;" v-text="connections"></span>
+								</div>
+								<m-layer width="4rem" show-triangle closable shadow v-model="onlineShow" target="#online-target" root="#online" placement="bottom" animation="scaleY2" wrapper-class="mvi-pb-1">
+									<div class="app-online-title mvi-text-sub">当前在线用户：</div>
+									<div v-for="(item,index) in users" :key="'user-'+index" class="app-online-el mvi-font-small">
+										<m-icon type="user-alt"></m-icon>
+										<span>{{item}}</span>
+									</div>
+								</m-layer>
+							</div>
+						</template>
+						<div ref="body" class="app-panel-body" v-scroll="scrollTopBottom">
+							<template v-for="(item,index) in list" :key="index">
+								<div v-if="item.type == 0 || item.type == 1"
+									class="mvi-text-center mvi-font-small mvi-text-muted mvi-mb-2">
+									<div v-if="item.data && item.data.time" v-text="item.data.time"></div>
+									<div v-text="item.content"></div>
+								</div>
+								<div v-if="item.type == 3"
+									class="mvi-text-center mvi-font-small mvi-text-muted mvi-mb-2">
+									<div v-text="item.data.time"></div>
+									<div v-text="item.content" class="mvi-text-link mvi-cursor-pointer" @click="reset">
+									</div>
+								</div>
+								<div v-if="item.type == 2">
+									<div class="mvi-flex-start">
+										<div class="mvi-text-bold mvi-text-info">{{item.userName}}</div>
+										<div class="mvi-text-muted mvi-font-small mvi-ml-2"
+											v-text="item.data.time"></div>
+									</div>
+									<m-editor height="0.2rem" auto-height :show-menus="false" :border="false" disabled
+										:value="item.content"></m-editor>
+								</div>
+							</template>
+						</div>
+						<!-- 未读消息提示 -->
+						<transition name="mvi-transition-fade">
+							<div @click="goBottom" class="app-unread-tips mvi-bg-primary mvi-radius-default mvi-font-small" v-if="unread>0" >
+								<m-triangle background="#1EACF3" border-color="#1EACF3" size=".1rem" class="app-unread-tri" placement="bottom"></m-triangle>
+								<span>{{unread}}条未读消息</span>
+							</div>
+						</transition>
+						<template #footer>
+							<m-editor ref="editor" :disabled="!webSocket || webSocket.readyState!=1" autofocus class="mvi-text-left"
+								:border="false" @keydown.enter.exact="sendMessage" @keyup.enter.exact="clearEditor"
+								height="2.4rem" placeholder="在这里输入..." v-model="message" :menus="editorMenus"
+								:upload-image-props="uploadImageProps" :menu-index="menuIndex" paste-text :layer-props="layerProps" :menu-icons="editorMenuIcons" :tooltips="editorTooltips" @custom="customAction"></m-editor>
+							<div class="mvi-flex-end mvi-p-2">
+								<m-button key="init" v-if="!webSocket || webSocket.readyState == 0"
+									:loading="connecting" load-text="正在连接..." @click="init" class="mvi-mr-2"
+									type="success" size="small">重新连接</m-button>
+								<m-button key="close" v-else-if="webSocket" :loading="disconnecting" load-text="正在断开..."
+									@click="closeWebSocket" class="mvi-mr-2" size="small">断开连接</m-button>
+								<m-button @click="clearScreen" class="mvi-mr-2" size="small">清空屏幕</m-button>
+								<m-button :disabled="isEmpty || connecting" type="info" size="small"
+									@click="sendMessage(true)">
+									<m-icon type="send" class="mvi-mr-1"></m-icon>发送消息
+								</m-button>
+							</div>
+						</template>
+					</m-panel>
+				</m-col>
+			</m-row>
+			<!-- emoji模态框 -->
+			<m-modal v-model="emojiShow" title="选择表情" closable show-times :content-padding="false">
+				<div class="app-emoji-list">
+					<div @click="sendEmoji(index)" class="app-emoji" v-prop="1" v-for="(item,index) in new Array(48)">
+						<m-image :src="'./emoji/emoji-'+(index+1)+'.png'" class="app-emoji-el"></m-image>
+					</div>
+				</div>
+			</m-modal>
+		</div>
+	</body>
+	<script src="./js/ruax.js" type="text/javascript" charset="utf-8"></script>
+	<script src="./js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="./mvi-web@4.10.9/mvi.umd.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="./js/index.js" type="text/javascript" charset="utf-8"></script>
+</html>
