@@ -1,6 +1,6 @@
 const ruax = new Ruax()
-ruax.defaults.baseUrl = 'https://www.mvi-web.cn/chatSys'//'http://localhost:3032','https://www.mvi-web.cn/chatSys'
-const wsUrl = 'wss://www.mvi-web.cn/ws' //'ws://localhost:3031',"wss://www.mvi-web.cn/ws"
+ruax.defaults.baseUrl = 'http://localhost:3032'//'http://localhost:3032','https://www.mvi-web.cn/chatSys'
+const wsUrl = 'ws://localhost:3031' //'ws://localhost:3031',"wss://www.mvi-web.cn/ws"
 const imageCompression = new ImageCompression({
 	mimeType:'jpeg',
 	quality:0.4,
@@ -147,7 +147,7 @@ new Vue({
 		}
 	},
 	created() {
-		document.title = '即时在线聊天室-'+this.room
+		document.title = '即时在线聊天室-' + this.room
 	},
 	mounted() {
 		this.userName = localStorage.getItem(this.userNameKey)
@@ -302,8 +302,22 @@ new Vue({
 			let isBottom = top >= height - this.$refs.body.offsetHeight
 			//获取数据
 			const data = JSON.parse(event.data)
+			//异常处理
+			if(data.type == -2){
+				this.$Alert({
+					message: data.content,
+					showTimes: false,
+					width:'6rem',
+					btns: {
+						ok: {
+							size: 'small',
+							type: 'error'
+						}
+					}
+				})
+			}
 			//心跳检测回执
-			if (data.type == -1) {
+			else if (data.type == -1) {
 				console.log('心跳检测回执', data)
 			}
 			//加入聊天室
@@ -461,6 +475,7 @@ new Vue({
 				})
 			})
 		},
+		//视频选择
 		uploadVideo(files){
 			const file = files[0]
 			this.$dap.file.dataFileToBase64(file).then(url=>{

@@ -150,6 +150,14 @@ html {
 	position: relative;
 }
 
+.app-online{
+	max-height: 4rem;
+	display: block;
+	width: 100%;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
 .app-online-el{
 	display: block;
 	vertical-align: middle;
