@@ -66,7 +66,7 @@
 							</div>
 						</transition>
 						<template #footer>
-							<m-editor ref="editor" :disabled="!webSocket || webSocket.readyState!=1" autofocus class="mvi-text-left"
+							<m-editor ref="editor" :disabled="!webSocket || webSocket.readyState!=1" class="mvi-text-left"
 								:border="false" @keydown.enter.exact="sendMessage" @keyup.enter.exact="clearEditor"
 								height="2.4rem" placeholder="在这里输入..." v-model="message" :menus="editorMenus"
 								:upload-image-props="uploadImageProps" :menu-index="menuIndex" paste-text :layer-props="layerProps" :menu-icons="editorMenuIcons" :tooltips="editorTooltips" @custom="customAction"></m-editor>
