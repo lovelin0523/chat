@@ -271,6 +271,10 @@ new Vue({
 		//连接成功建立的回调方法
 		onOpen() {
 			console.log('webSocket连接成功')
+			this.$showToast({
+				type:'loading',
+				message:'正在读取历史记录'
+			})
 			this.send(JSON.stringify({
 				room: this.room,
 				type: 0,
@@ -306,6 +310,7 @@ new Vue({
 			else if (data.type == 0) {
 				console.log('加入聊天室通知', data)
 				if (data.data.list) {
+					this.$hideToast()
 					this.list = data.data.list || []
 				}
 				this.users = data.data.users
