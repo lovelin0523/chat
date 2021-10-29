@@ -336,6 +336,16 @@ new Vue({
 						time: data.data.time
 					}
 				})
+				//如果滚动条本身在底部，则继续定位到底部
+				if (isBottom) {
+					this.$nextTick(() => {
+						this.goBottom()
+					})
+				}
+				//不在底部则告知未读消息
+				else {
+					this.unread++
+				}
 			}
 			//离开聊天室
 			else if (data.type == 1) {
@@ -349,6 +359,16 @@ new Vue({
 						time: data.data.time
 					}
 				})
+				//如果滚动条本身在底部，则继续定位到底部
+				if (isBottom) {
+					this.$nextTick(() => {
+						this.goBottom()
+					})
+				}
+				//不在底部则告知未读消息
+				else {
+					this.unread++
+				}
 			}
 			//普通消息
 			else if (data.type == 2) {
@@ -361,17 +381,16 @@ new Vue({
 						time: data.data.time
 					}
 				})
-
-			}
-			//如果滚动条本身在底部，则继续定位到底部
-			if (isBottom) {
-				this.$nextTick(() => {
-					this.goBottom()
-				})
-			}
-			//不在底部则告知未读消息
-			else {
-				this.unread++
+				//如果滚动条本身在底部，则继续定位到底部
+				if (isBottom) {
+					this.$nextTick(() => {
+						this.goBottom()
+					})
+				}
+				//不在底部则告知未读消息
+				else {
+					this.unread++
+				}
 			}
 		},
 		//连接关闭的回调方法
