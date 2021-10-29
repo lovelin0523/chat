@@ -1,5 +1,5 @@
 const ruax = new Ruax()
-ruax.defaults.baseUrl = 'https://www.mvi-web.cn/chatSys'//'http://localhost:3032','https://www.mvi-web.cn/chatSys'
+ruax.defaults.baseUrl = 'https://www.mvi-web.cn/chatSys'//'http://localhost:3032/chatSys','https://www.mvi-web.cn/chatSys'
 const wsUrl = 'wss://www.mvi-web.cn/ws' //'ws://localhost:3031',"wss://www.mvi-web.cn/ws"
 const imageCompression = new ImageCompression({
 	mimeType:'jpeg',
@@ -79,7 +79,10 @@ new Vue({
 				table: [],
 				code: false,
 				removeFormat: false,
-				emoji: true
+				emoji: true,
+				subscript:false,
+				superscript:false,
+				justify:[]
 			},
 			//编辑器菜单图标配置
 			editorMenuIcons: {
@@ -315,6 +318,7 @@ new Vue({
 						}
 					}
 				})
+				this.closeWebSocket()
 			}
 			//心跳检测回执
 			else if (data.type == -1) {
@@ -352,6 +356,9 @@ new Vue({
 				console.log('离开聊天室通知', data)
 				this.connections = data.data.connections
 				this.users = data.data.users
+				if(data.userName == this.userName){
+					return
+				}
 				this.list.push({
 					type: data.type,
 					content: data.content,

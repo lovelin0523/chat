@@ -12,20 +12,20 @@
 		<div id="app" v-cloak>
 			<m-row>
 				<m-col style="position: relative;" :xs="{span:24,offset:0}" :sm="{span:22,offset:1}" :md="{span:18,offset:3}" :lg="{span:14,offset:5}" :xl="{span:10,offset:7}">
-					<m-panel class="app-panel" title-class="mvi-bg-info mvi-flex-start app-panel-title"
+					<m-panel class="app-panel" title-class="mvi-bg-info mvi-flex-between app-panel-title"
 						content-class="app-panel-content" footer-class="mvi-p-0">
 						<template #title>
 							<div class="mvi-text-bold mvi-font-h4">即时在线聊天室【{{room}}】</div>
-							<div v-if="connecting" class="mvi-flex-start mvi-ml-4">
+							<div v-if="connecting" class="mvi-flex-start">
 								<m-loading color="#03a8f3" size="0.28rem"></m-loading>
 								<span class="mvi-ml-1">正在连接...</span>
 							</div>
-							<div v-else id="online" class="mvi-ml-4" @mouseenter="onlineShow=true" @mouseleave="onlineShow=false">
+							<div v-else id="online" @mouseenter="onlineShow=true" @mouseleave="onlineShow=false">
 								<div class="mvi-flex-start mvi-cursor-pointer" id="online-target">
 									<m-icon type="user-group"></m-icon>
 									<span style="line-height: 1;" v-text="connections"></span>
 								</div>
-								<m-layer width="4rem" show-triangle closable shadow v-model="onlineShow" target="#online-target" root="#online" placement="bottom" animation="scaleY2" wrapper-class="mvi-pb-1">
+								<m-layer width="4rem" shadow v-model="onlineShow" target="#online-target" root="#online" placement="left" animation="scaleX" wrapper-class="mvi-pb-1">
 									<div class="app-online">
 										<div class="app-online-title mvi-text-sub">当前在线用户：</div>
 										<div v-for="(item,index) in users" :key="'user-'+index" class="app-online-el mvi-font-small">
@@ -39,12 +39,12 @@
 						<div ref="body" class="app-panel-body" v-scroll="scrollTopBottom">
 							<template v-for="(item,index) in list" :key="index">
 								<div v-if="item.type == 0 || item.type == 1"
-									class="mvi-text-center mvi-font-small mvi-text-muted mvi-mb-2">
+									class="mvi-text-center mvi-font-small mvi-text-muted mvi-mb-2 select-none">
 									<div v-if="item.data && item.data.time" v-text="item.data.time"></div>
 									<div v-text="item.content"></div>
 								</div>
 								<div v-if="item.type == 3"
-									class="mvi-text-center mvi-font-small mvi-text-muted mvi-mb-2">
+									class="mvi-text-center mvi-font-small mvi-text-muted mvi-mb-2 select-none">
 									<div v-text="item.data.time"></div>
 									<div v-text="item.content" class="mvi-text-link mvi-cursor-pointer" @click="reset">
 									</div>

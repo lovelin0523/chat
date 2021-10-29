@@ -109,13 +109,18 @@ html {
 	transform-origin: center bottom;
 }
 
-.scaleY-enter,.scaleY-leave-to,.scaleY2-enter,.scaleY2-leave-to{
+.scaleY-enter,.scaleY-leave-to{
 	opacity: 0;
 	transform:scaleY(0);
 }
 
-.scaleY2-enter-active,.scaleY2-leave-active{
-	transform-origin: center top;
+.scaleX-enter-active,.scaleX-leave-active{
+	transform-origin: center right;
+}
+
+.scaleX-enter,.scaleX-leave-to{
+	opacity: 0;
+	transform:scaleX(0);
 }
 
 .app-emoji-list{
@@ -178,4 +183,11 @@ html {
 	margin-bottom: .1rem;
 	padding: .1rem .2rem;
 	border-bottom: 1px solid #EBEDF0;
+}
+
+.select-none{
+	user-select:none;
+	-ms-user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
 }
