@@ -131,7 +131,13 @@ new Vue({
 			//在线用户列表
 			users:[],
 			//是否显示在线用户浮层
-			onlineShow:false
+			onlineShow:false,
+			//图片数组
+			images:[],
+			//图片是否显示
+			imageShow:false,
+			//预览的图片序列
+			imageIndex:0
 		}
 	},
 	computed: {
@@ -399,6 +405,19 @@ new Vue({
 					this.unread++
 				}
 			}
+			this.$nextTick(()=>{
+				this.images = []
+				this.$refs.body.querySelectorAll('.mvi-editor-image').forEach((el,index)=>{
+					this.images.push(el.getAttribute('src'))
+					this.$dap.data.set(el,'index',index)
+					this.$dap.event.off(el,'click')
+					this.$dap.event.on(el,'click',e=>{
+						this.imageIndex = this.$dap.data.get(e.currentTarget,'index')
+						console.log(this.imageIndex)
+						this.imageShow = true
+					})
+				})
+			})
 		},
 		//连接关闭的回调方法
 		onClose() {
