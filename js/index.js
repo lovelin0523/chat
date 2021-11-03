@@ -78,7 +78,7 @@ new Vue({
 				quote: false,
 				table: [],
 				code: false,
-				removeFormat: false,
+				removeFormat: true,
 				emoji: true,
 				subscript:false,
 				superscript:false,
